@@ -1,0 +1,9 @@
+export { default as Home } from "./Home";
+export { default as Shop } from "./Shop";
+export { default as ProductInfo } from "./ProductInfo";
+export { default as Cart } from "./Cart";
+export { default as Login } from "./Login";
+export { default as Sginup } from "./SginUp";
+export { default as CheckOut } from "./CheckOut";
+export { default as Dashboard } from "./Dashboard";
+export { default as ProductInfoAdmin } from "./ProductInfoAdmin";
