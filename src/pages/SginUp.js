@@ -21,6 +21,12 @@ const Sginup = () => {
     });
     if (data.user === null) throw error;
   };
+  const addUser = async (name, email) => {
+    let { data, error } = await supabase
+      .from("users")
+      .insert({ name: name, email: email });
+    if (data !== null) throw error;
+  };
   const handleSginUp = () => {
     const userName = userNameRef.current.value;
     const email = emailRef.current.value;
@@ -28,32 +34,32 @@ const Sginup = () => {
     if (!userName || !email || !password) toast.error("Fill All Inputs");
     else {
       if (checkPassword(password)) {
-        toast
-          .promise(sginupFun(email, password), {
-            loading: "Waitting...",
-            success: <b>Sgin up , go to email to vervication.</b>,
-            error: <b>Could not Sgin up.</b>,
-          })
-          .then(() => {
-            toast.promise(
-              supabase
-                .from("users")
-                .insert({ name: userName, email: email })
-                .select(),
-              {
+        try {
+          toast
+            .promise(sginupFun(email, password), {
+              loading: "Waitting...",
+              success: <b>Sgin up , go to email to vervication.</b>,
+              error: <b>Could not Sgin up.</b>,
+            })
+            .then(() => {
+              toast.promise(addUser(userName, email), {
                 loading: "Adding user...",
                 success: <b>User Added!</b>,
                 error: <b>Could not add user.</b>,
-              }
-            );
-            userNameRef.current.value = "";
-            emailRef.current.value = "";
-            passwordRef.current.value = "";
-            navigate("/login");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+              });
+              userNameRef.current.value = "";
+              emailRef.current.value = "";
+              passwordRef.current.value = "";
+              navigate("/");
+            })
+            .catch((error) => {
+              toast(error.message + `, try later.`, {
+                icon: "⚠",
+              });
+            });
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
